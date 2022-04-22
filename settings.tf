@@ -54,12 +54,12 @@ variable "routed_web" {
 variable "vm_main_template" {
   type        = map
   default     = {
-    "catalog_name" = "OneCloud_Templates_SSD_Producer"
-    "template_name" = "Ubuntu 18.04 x64 v7 (minimal requirements)"
-    "cpus" = 2
-    "memory" = 2048
-    "network_name" = "routed_web"
-    "ip_mode" = "MANUAL"
+    "catalog_name" = "OneCloud_Templates_SSD_Producer" #каталог шаблонов
+    "template_name" = "Ubuntu 18.04 x64 v7 (minimal requirements)" #vAPP шаблон
+    "cpus" = 2 #количество ядер
+    "memory" = 2048 #объём оперативной памяти
+    "network_name" = "routed_web" #название сети, к которой подключена VM
+    "ip_mode" = "MANUAL" #тип выдачи IP
   }
 }
 

@@ -8,35 +8,35 @@ terraform {
 }
 
 provider "vcd" {
-    auth_type = "integrated"
-    max_retry_timeout = 10
-    user = var.connect["user"]
-    password = var.connect["password"]
-    org = var.connect["organization"]
-    url = var.connect["url_connect"]
+    auth_type = "integrated" #Тип авторизации
+    max_retry_timeout = 10 #Максимальное число попыток соединения
+    user = var.connect["user"] #Имя пользователя
+    password = var.connect["password"] #Пароль пользователя
+    org = var.connect["organization"] #Название организации
+    url = var.connect["url_connect"] #Адрес, на который будут посылаться API-запросы
 }
 
 #=====Создание маршрутизируемой сети========
 resource "vcd_network_routed" "net" {
-  org = var.connect["organization"]
-  vdc = var.connect["data_center"]
+  org = var.connect["organization"] #Название организации
+  vdc = var.connect["data_center"] #Название ЦОДа
 
-  name         = var.routed_web["name"]
-  edge_gateway = var.routed_web["edge"]
-  gateway      = var.routed_web["gateway"]
+  name         = var.routed_web["name"] #Название сети
+  edge_gateway = var.routed_web["edge"] #Название виртуального роутера
+  gateway      = var.routed_web["gateway"] #Шлюз сети
 
-  netmask      = var.routed_web["netmask"]
-  dns1         = var.routed_web["dns_1"]
-  dns2         = var.routed_web["dns_2"]
+  netmask      = var.routed_web["netmask"] #Маска сети
+  dns1         = var.routed_web["dns_1"] #1 DNS-сервер
+  dns2         = var.routed_web["dns_2"] #2 DNS-сервер
 
-  dhcp_pool {
-    start_address = var.routed_web["dhcp_start"]
-    end_address   = var.routed_web["dhcp_end"]
+  dhcp_pool { #Пул dhcp-адресов
+    start_address = var.routed_web["dhcp_start"] #первый адрес пула
+    end_address   = var.routed_web["dhcp_end"] #последний адрес пула
   }
 
-  static_ip_pool {
-    start_address = var.routed_web["static_start"]
-    end_address   = var.routed_web["static_end"]
+  static_ip_pool { #Пул статик IP-адресов
+    start_address = var.routed_web["static_start"] #первый адрес пула
+    end_address   = var.routed_web["static_end"] #последний адрес пула
   }
 }
 
@@ -106,34 +106,34 @@ resource "vcd_nsxv_dnat" "PostgreSQL" {
 
 #Nginx
 resource "vcd_vm" "Nginx" {
-  org = var.connect["organization"]
-  vdc = var.connect["data_center"]
+  org = var.connect["organization"] #Имя организации
+  vdc = var.connect["data_center"] #Имя ЦОДа
 
-  name = var.Nginx["name"]
-  computer_name = var.Nginx["name"]
-  power_on = true
+  name = var.Nginx["name"] #Название VM
+  computer_name = var.Nginx["name"] #Имя хоста
+  power_on = true #Машина будет включена после создания
 
-  cpus = var.vm_main_template["cpus"]
-  memory = var.vm_main_template["memory"]
+  cpus = var.vm_main_template["cpus"] #Количество процессорных ядер
+  memory = var.vm_main_template["memory"] #Количество оперативной памяти
 
-  catalog_name  = var.vm_main_template["catalog_name"]
-  template_name = var.vm_main_template["template_name"]
+  catalog_name  = var.vm_main_template["catalog_name"] #Каталог, с шаблоном VM
+  template_name = var.vm_main_template["template_name"] #Шаблон VM
 
-  network {
-    name               = var.routed_web["name"]
-    type               = var.routed_web["type"]
-    ip_allocation_mode = var.vm_main_template["ip_mode"]
-    ip = var.Nginx["ip"]
+  network { #Настройки сети, к которой подключается VM
+    name               = var.routed_web["name"] #Имя сети
+    type               = var.routed_web["type"] #Тип сети
+    ip_allocation_mode = var.vm_main_template["ip_mode"] #Тип выдачи IP -- ручной из Static pool
+    ip = var.Nginx["ip"] #IP VM
   }
 
-  customization {
-    force                      = true
-    allow_local_admin_password = true
-    auto_generate_password     = false
-    admin_password             = var.guest_properties["admin_passwd"]
+  customization { #Кастомизация ОС
+    force                      = true #Применить параметры кастомизации
+    allow_local_admin_password = true #Наличие локального пароля админа
+    auto_generate_password     = false #Отмена автогенерации пароля
+    admin_password             = var.guest_properties["admin_passwd"] #Пароль администратора
   }
 
-  depends_on = [vcd_nsxv_snat.web] 
+  depends_on = [vcd_nsxv_snat.web] # Ожидания выполнения блока с кодом
 }
 
 #Django
