@@ -1,0 +1,32 @@
+---
+#Преднастройка
+- name: Преднастройка пакетного менеджера aptitude
+  apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+
+# Установка Nginx
+- name: ensure nginx is at the latest version
+  apt: name=nginx state=latest
+
+- name: start nginx
+  service:
+    name: nginx
+    state: started
+
+# Настройка Nginx
+- name: Скопировать и переименовать Nginx конфиг
+  template:
+    src: "django.j2"
+    dest: "/etc/nginx/sites-available/django"
+
+- name: Создать симлинк
+  file:
+    src: "/etc/nginx/sites-available/django"
+    dest: "/etc/nginx/sites-enabled/django"
+    state: link
+  notify: Reload Nginx
+
+- name: Удалить дефолтный сайт
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+  notify: Reload Nginx

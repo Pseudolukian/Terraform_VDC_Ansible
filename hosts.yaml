@@ -1,0 +1,7 @@
+all:
+  hosts:
+    frontend_server:
+      ansible_port: 22
+      ansible_host: 89.22.173.56
+      ansible_username: root
+      ansible_password: Pseudokatkov1

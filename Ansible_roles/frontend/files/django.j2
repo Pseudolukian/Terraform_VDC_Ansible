@@ -1,0 +1,7 @@
+server {
+    listen 80; #Порт прослушивания
+    server_name {{server_name}}; #Название домена
+    location / {
+        proxy_pass {{proxy_pass}}; #Проксирование на IP-адрес
+    }
+}
