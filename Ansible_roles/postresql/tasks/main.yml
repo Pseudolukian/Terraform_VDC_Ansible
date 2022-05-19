@@ -1,2 +1,50 @@
 ---
-# tasks file for postresql
+
+#Установка PostgreSQL
+- name: Установка PSQL
+  apt:
+    pkg:
+      - postgresql
+      - postgresql-contrib
+      - postgresql-server-dev-all
+      - python3-psycopg2
+      - python-psycopg2
+    state: latest
+
+- name: Запуск PSQL
+  service: name=postgresql enabled=yes state=started 
+
+- name: Создание БД
+  postgresql_db: name={{ bd_name }}
+  become_user: postgres
+  become: yes
+  
+- name: Создание пользователя для подключения Django
+  postgresql_user: db={{ bd_name }}
+                  name={{ bd_user }}
+                  password={{ bd_passwd }}
+                  encrypted=yes
+                  priv=ALL
+                  state=present
+                  role_attr_flags=NOSUPERUSER,NOCREATEDB
+  become: yes
+  become_user: postgres  
+
+
+#Настройка PostgreSQL
+- name: Открываем все порты для прослушивания
+  lineinfile: dest=/etc/postgresql/10/main/postgresql.conf
+              regexp='^#listen_addresses'
+              insertbefore=BOF
+              line='listen_addresses = '*''  
+
+- name: Добавляем IP-адрес Django в разрешённые
+  lineinfile: dest=/etc/postgresql/10/main/pg_hba.conf
+              regexp='^'
+              line='host  all  all 0.0.0.0/0 md5'
+              state=present
+
+- name: Перезапуск PSQL
+  systemd:
+    name: postgresql
+    state: restarted

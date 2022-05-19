@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source {{ project_name_path }}/env/bin/activate 
+exec gunicorn -c "{{ project_name_path }}/{{ project_name }}/{{ project_name }}/gunicorn_config.py" {{ project_name }}.wsgi

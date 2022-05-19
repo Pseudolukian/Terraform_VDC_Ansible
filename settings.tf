@@ -71,6 +71,7 @@ variable "Nginx" {
     "name" = "Nginx"
     "ip" = "10.10.0.3"
     "ssh_port" = "22"
+    "web_port" = "80"
   }
 }
 

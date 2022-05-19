@@ -4,10 +4,10 @@
   apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
 
 # Установка Nginx
-- name: ensure nginx is at the latest version
+- name: Установка последней версии Nginx
   apt: name=nginx state=latest
 
-- name: start nginx
+- name: Запуск Nginx 
   service:
     name: nginx
     state: started

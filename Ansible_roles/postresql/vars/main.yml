@@ -1,2 +1,4 @@
 ---
-# vars file for postresql
+bd_name: dtb_db
+bd_user: dc
+bd_passwd: Django_Connecter

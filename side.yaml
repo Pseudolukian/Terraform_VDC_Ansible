@@ -2,3 +2,13 @@
   hosts: frontend_server
   roles:
     - frontend
+
+- name: Install PostgreSQL
+  hosts: postgresql
+  roles:
+    - postresql   
+
+- name: Install Django and Gunicorn
+  hosts: backend_server
+  roles:
+    - backend

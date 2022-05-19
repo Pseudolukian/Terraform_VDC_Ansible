@@ -1,2 +1,97 @@
 ---
-# tasks file for backend
+
+# Установка Django
+- name: Установка необходимых пакетов для Django
+  apt: 
+    name: "{{ item }}" 
+    update_cache: yes 
+    state: latest 
+    force_apt_get: yes
+  loop: ["zlib1g-dev", "libbz2-dev", "libreadline-dev", "llvm", "libncurses5-dev", 
+  "libncursesw5-dev", "xz-utils", "tk-dev", "liblzma-dev", "python3-dev", "python-pil", 
+  "python3-lxml", "libxslt-dev", "libffi-dev", "libssl-dev", "python-dev", "gnumeric", 
+  "libsqlite3-dev", "libpq-dev", "libxml2-dev", "libxslt1-dev", "libjpeg-dev", "libfreetype6-dev", 
+  "libcurl4-openssl-dev", "python-libxml2", "python3-venv", "imagemagick", "graphicsmagick", 
+  "imagemagick-6.q16hdri", "python3-virtualenv","virtualenv"]
+
+- name: Создание рабочей директории проекта
+  file: path={{project_name_path}} state=directory
+
+- name: Установка Django
+  pip:
+    name: django
+    virtualenv: "{{project_name_path}}/env"
+    virtualenv_command: virtualenv
+    virtualenv_python: python3
+
+- name: Установка psycopg2
+  pip:
+    name: psycopg2
+    virtualenv: "{{project_name_path}}/env"
+    virtualenv_command: virtualenv
+    virtualenv_python: python3
+
+- name: Развёртывание демо-проекта
+  command: "{{ project_name_path }}/env/bin/django-admin.py startproject {{ project_name }} chdir={{ project_name_path }}/"
+
+- name: Создание первого Web-приложения
+  django_manage:
+    command: startapp {{web_app}}
+    virtualenv: "{{ project_name_path }}/env"  
+    app_path: "{{ project_name_path }}/{{ project_name }}"
+
+- name: Копирование Django-конфига
+  template: 
+    src: "settings.j2" 
+    dest: "{{ project_name_path }}/{{ project_name }}/{{ project_name }}/settings.py"
+
+
+- name: Make migrations
+  shell: "{{project_name_path}}/env/bin/python3 {{ project_name_path }}/{{ project_name }}/manage.py makemigrations"
+
+- name: Migrate database
+  django_manage: app_path={{ project_name_path }}/{{ project_name }}
+                  command=migrate
+                  virtualenv={{project_name_path}}/env         
+
+# Установка Gunicorn
+
+- name: Установка Gunicorn
+  pip:
+    name: gunicorn
+    virtualenv: "{{project_name_path}}/env"
+    virtualenv_command: virtualenv
+    virtualenv_python: python3
+
+- name: Копирование Gunicorn-конфига
+  template: 
+    src: "gunicorn_settings.j2" 
+    dest: "{{ project_name_path }}/{{ project_name }}/{{ project_name }}/gunicorn_config.py"
+
+- name: Копирование скрипта запуска Gunicorn
+  template: 
+    src: "gunicorn.j2" 
+    dest: "{{ project_name_path }}/{{ project_name }}/gunicorn.sh"
+    mode: a+x
+
+- name: Создание пользователя www
+  user:
+    name: www
+
+- name: Копирование Gunicorn юнита      
+  template: 
+    src: "gunicorn.serviсe.j2" 
+    dest: "/etc/systemd/system/gunicorn.service"
+    mode: 0775
+
+- name: Обновление юнитов
+  shell: "systemctl daemon-reload"
+
+- name: Запуск Gunicorn при старте или перезагрузке
+  shell: "systemctl enable gunicorn"
+
+- name: Запуск Gunicorn
+  shell: "systemctl start gunicorn"  
+
+
+  

@@ -1,0 +1,13 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=www
+Group=www-data
+WorkingDirectory= {{ project_name_path }}/{{ project_name }}/
+ExecStart= {{ project_name_path }}/{{ project_name }}/gunicorn.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

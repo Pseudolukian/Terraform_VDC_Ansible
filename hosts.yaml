@@ -2,6 +2,27 @@ all:
   hosts:
     frontend_server:
       ansible_port: 22
-      ansible_host: 89.22.173.56
-      ansible_username: root
-      ansible_password: Pseudokatkov1
+      ansible_host: VDC_IP
+      ansible_username: user
+      ansible_password: passwd
+      ansible_python_interpreter:  interp
+
+    backend_server:
+      ansible_port: 23
+      ansible_host: VDC_IP
+      ansible_username: user
+      ansible_password: passwd
+      ansible_python_interpreter:  interp
+
+    postgresql:
+      ansible_port: 24
+      ansible_host: VDC_IP
+      ansible_username: user
+      ansible_password: passwd
+      ansible_python_interpreter:  interp
+
+      vars:
+        VDC_IP: 89.22.173.56
+        user: root
+        passwd: Pseudokatkov1
+        interp: /usr/bin/python3

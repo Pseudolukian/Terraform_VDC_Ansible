@@ -1,0 +1,7 @@
+server {
+    listen 80; #Порт прослушивания
+    server_name {{ domain }}; #Название домена
+    location / {
+        proxy_pass {{ gunicorn_ip }}; #Проксирование на IP-адрес
+    }
+}

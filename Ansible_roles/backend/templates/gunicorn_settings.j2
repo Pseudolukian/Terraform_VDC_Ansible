@@ -1,0 +1,6 @@
+command = "{{ project_name_path }}/env/bin/gunicorn"
+python_path = "{{ project_name_path }}/{{ project_name }}/{{ project_name }}"
+bind = "0.0.0.0:8001"
+workers = 5
+user = "www"
+raw_env = "DJANGO_SETTINGS_MODULE={{ project_name }}.settings"

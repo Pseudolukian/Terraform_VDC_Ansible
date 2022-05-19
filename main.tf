@@ -72,6 +72,22 @@ resource "vcd_nsxv_dnat" "Nginx" {
   protocol = "tcp"
 }
 
+
+resource "vcd_nsxv_dnat" "Nginx_80_port" {
+  org = var.connect["organization"]
+  vdc = var.connect["data_center"]
+
+  edge_gateway = var.edge["name"]
+  network_type = var.main_web["type"]
+  network_name = var.main_web["name"]
+
+  original_address   = var.edge["ip"]
+  original_port = var.Nginx["web_port"]
+  translated_address = var.Nginx["ip"]
+  translated_port = "80"
+  protocol = "tcp"
+}
+
 resource "vcd_nsxv_dnat" "Django" {
   org = var.connect["organization"]
   vdc = var.connect["data_center"]
@@ -96,8 +112,8 @@ resource "vcd_nsxv_dnat" "PostgreSQL" {
   network_name = var.main_web["name"]
 
   original_address   = var.edge["ip"]
-  original_port = var.PostgreSQL["ssh_port"]
-  translated_address = var.PostgreSQL["ip"]
+  original_port = var.Nginx["web_port"]
+  translated_address = var.Nginx["ip"]
   translated_port = "22"
   protocol = "tcp"
 }
