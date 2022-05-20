@@ -1,14 +1,14 @@
-- name: Install Nginx
+- name: Установка Nginx
   hosts: frontend_server
   roles:
     - frontend
 
-- name: Install PostgreSQL
+- name: Установка PostgreSQL
   hosts: postgresql
   roles:
     - postresql   
 
-- name: Install Django and Gunicorn
+- name: Установка Django и Gunicorn
   hosts: backend_server
   roles:
     - backend

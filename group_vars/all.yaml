@@ -1,0 +1,19 @@
+#Параметры подключения
+vdc_ip: 89.22.173.56
+user: "root" 
+passwd: "Pseudokatkov1" 
+interp: "/usr/bin/python3"
+
+#Параметры Nginx
+gunicorn_ip: 10.10.0.4:8001
+domain: my_test_site.ru
+
+#Параметры Django, Gunicorn и PSQL
+project_name_path: /var/www/django_test
+project_name: test_project
+web_app: first
+bd_name: dtb_db
+bd_user: dc
+bd_passwd: Django_Connecter
+bd_host: 10.10.0.5
+db_host_port: 5432

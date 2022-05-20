@@ -1,19 +1,4 @@
 ---
-project_name_path: /var/www/django_test
-project_name: test_project
 
-web_app: first
-
-bd_name: dtb_db
-bd_user: dc
-bd_passwd: Django_Connecter
-bd_host: 10.10.0.5
-db_host_port: 5432
-gunicorn_ip: http://10.10.0.4:8001
-
-host: 89.22.173.56
-frontend_ip: 10.10.0.3
-backend_ip: 10.10.0.4
-postgresql_ip: 10.10.0.5
 
 

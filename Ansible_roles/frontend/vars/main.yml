@@ -1,4 +1,1 @@
 ---
-server_name : 89.22.173.56
-gunicorn_ip : 10.10.0.4:8001
-domain: my_test_site.ru
